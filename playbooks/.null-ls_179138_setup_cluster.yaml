@@ -1,0 +1,106 @@
+---
+- name: Setuop k8s cluster
+  hosts: linux_server
+  become: true
+
+  vars:
+    modulos:
+      - overlay
+      - br_netfilter
+    sysctlvalues:
+      - net.bridge.bridge-nf-call-iptables
+      - net.ipv4.ip_forward
+      - net.bridge.bridge-nf-call-ip6tables
+
+  tasks:
+    - name: Setup modules
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+        persistent: present
+      loop: "{{ modulos }}"
+    - name: Setup sysctl setting {{ item }}
+      ansible.posix.sysctl:
+        name: "{{ item }}"
+        value: 1
+        state: present
+      loop: "{{ sysctlvalues }}"
+    - name: Update Server
+      apt:
+        upgrade: dist
+        force_apt_get: yes
+    - name: Install containerd
+      apt:
+        name: containerd
+        state: present
+    - name: Create container folder
+      file:
+        path: /etc/containerd
+        state: directory
+    - name: Create cofig file for containerd
+      shell: containerd config default | sudo tee /etc/containerd/config.toml
+      args:
+        creates: /etc/containerd/config.toml
+      notify: Restart_Containerd
+    - name: Ensure containerd is enabled
+      systemd:
+        name: containerd
+        enabled: true
+        state: started
+
+    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+      shell: |
+        swapoff -a
+    - name: Disable SWAVP in fstab since kubernetes can't work with swap enabled (2/2)
+      replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+    - name: install necessary packages
+      apt:
+        name:
+          - apt-transport-https
+          - curl
+    - name: Add apt key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+    - name: add repository
+      ansible.builtin.apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+    - name: add kubernet pacages
+      apt:
+        name:
+          - kubelet=1.27.0-00
+          - kubeadm=1.27.0-00
+          - kubectl=1.27.0-00
+    - name: Set hold on packages
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+    - name: Init kube cluster
+      block: 
+        - name: start k8s-cluster
+          shell: kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.27.0
+          args:
+            creates: /etc/kubernetes/admin.conf
+        - name: setup kubectl access
+          ansible.builtin.copy:
+            remote_src: yes
+            src: /etc/kubernetes/admin.conf
+            dest: /root/.kube/config 
+      when: inventory_hostname}} == 'k8s-control'
+    
+
+  handlers:
+    - name: Restart_Containerd
+      systemd:
+        name: containerd
+        state: restarted
+
+
