@@ -1,19 +1,21 @@
 ---
-- name: Setup hosts
+- name: Setup host
   hosts: linux_server
   become: true
 
   tasks:
-    - name: create svc_ansible
-      user:
+    - name: Create svc_ansible user
+      ansible.builtin.user:
         name: svc_ansible
         state: present
-    - name: copy
-      ansible.builtin.authorized_key:
+    - name: Copy your id_rsa.pub
+      ansible.posix.authorized_key:
         user: svc_ansible
         key: "{{lookup('file','/root/.ssh/id_rsa.pub')}}"
-    - name: configure sudo
-      copy:
+    - name: Configure sudo
+      ansible.builtin.copy:
         content: "svc_ansible ALL=(ALL) NOPASSWD: ALL"
         dest: "/etc/sudoers.d/svc_ansible"
         validate: visudo -csf %s
+        owner: root
+        mode: o+r,g+r,o-rwx
