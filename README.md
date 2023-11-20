@@ -1,0 +1,2 @@
+# CKA
+I am presently preparing for the CKA certification. As part of this preparation, I am in the process of establishing a Kubernetes cluster. To streamline the setup, I am creating an Ansible role to automate the Kubernetes cluster configuration. This practical, hands-on experience is proving to be invaluable for my learning journey. If you find this information helpful, please feel free to enjoy the process as well
