@@ -1,3 +1,8 @@
+[new_hosts]
+k8s-worker1 ansible_host=192.168.122.43
+k8s-worker2 ansible_host=192.168.122.28
+k8s-controler ansible_host=192.168.122.30
+
 [k8s_cluster]
 k8s-worker1 ansible_host=192.168.122.43
 k8s-worker2 ansible_host=192.168.122.28

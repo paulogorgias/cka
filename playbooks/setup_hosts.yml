@@ -1,6 +1,6 @@
 ---
 - name: Setup host
-  hosts: linux_server
+  hosts: new_hosts
   become: true
 
   tasks:

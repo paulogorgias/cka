@@ -49,27 +49,27 @@
         enabled: true
         state: started
 
-    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
-      ansible.builtin.shell: |
-        swapoff -a
-    - name: Disable SWAVP in fstab since kubernetes can't work with swap enabled (2/2)
-      ansible.builtin.replace:
-        path: /etc/fstab
-        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
-        replace: '# \1'
-    - name: install necessary packages
-      ansible.builtin.apt:
-        name:
-          - apt-transport-https
-          - curl
-    - name: Add apt key
-      ansible.builtin.apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        state: present
-    - name: add repository
-      ansible.builtin.apt_repository:
-        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
-        state: present
+    # - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+    #   ansible.builtin.shell: |
+    #     swapoff -a
+    # - name: Disable SWAVP in fstab since kubernetes can't work with swap enabled (2/2)
+    #   ansible.builtin.replace:
+    #     path: /etc/fstab
+    #     regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    #     replace: '# \1'
+    # - name: install necessary packages
+    #   ansible.builtin.apt:
+    #     name:
+    #       - apt-transport-https
+    #       - curl
+    # - name: Add apt key
+    #   ansible.builtin.apt_key:
+    #     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    #     state: present
+    # - name: add repository
+    #   ansible.builtin.apt_repository:
+    #     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    #     state: present
     - name: add kubernet pacages
       ansible.builtin.apt:
         name:
