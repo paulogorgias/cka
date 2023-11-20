@@ -1,0 +1,24 @@
+- name: Update Debian hosts
+  ansible.builtin.apt:
+    upgrade: dist
+    force_apt_get: true
+  notify: restar_hosts
+- name: Setup modules on Debian hosts
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ g02_modulos }}"
+- name: Check if there is any swap partition enabled on host
+  ansible.builtin.shell: "lsblk"
+  register: lsblk_output
+  ignore_errors: yes
+
+- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+  ansible.builtin.shell: |
+    swapoff -a
+  when: "'[SWAP]' in lsblk_output.stdout_lines"
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'

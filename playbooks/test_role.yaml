@@ -1,0 +1,8 @@
+---
+- name: Setup K8S Cluster
+  hosts: k8s_cluster
+  become: true
+
+
+  roles:
+    - role: /home/g02/apps/cka/roles/g02-k8s-cluster

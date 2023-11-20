@@ -1,0 +1,5 @@
+---
+# vars file for g02-k8s-cluster
+g02_modulos:
+ - overlay
+ - br_netfilter

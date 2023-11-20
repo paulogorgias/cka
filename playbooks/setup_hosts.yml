@@ -11,7 +11,7 @@
     - name: Copy your id_rsa.pub
       ansible.posix.authorized_key:
         user: svc_ansible
-        key: "{{lookup('file','/root/.ssh/id_rsa.pub')}}"
+        key: "{{ lookup('file', '/home/g02/.ssh/id_rsa.pub') }}"
     - name: Configure sudo
       ansible.builtin.copy:
         content: "svc_ansible ALL=(ALL) NOPASSWD: ALL"
@@ -19,3 +19,7 @@
         validate: visudo -csf %s
         owner: root
         mode: o+r,g+r,o-rwx
+    - name: Setup hsotname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+        

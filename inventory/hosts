@@ -1,7 +1,7 @@
-[linux_server]
-k8s-control ansible_host=44873769111c.mylabserver.com
-k8s-worker1 ansible_host=44873769112c.mylabserver.com
-k8s-worker2 ansible_host=44873769113c.mylabserver.com
+[k8s_cluster]
+k8s-worker1 ansible_host=192.168.122.43
+k8s-worker2 ansible_host=192.168.122.28
+k8s-controler ansible_host=192.168.122.30
 
 [workers]
 k8s-worker1
