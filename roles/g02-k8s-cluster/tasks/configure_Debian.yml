@@ -1,0 +1,17 @@
+---
+- name: Create container folder
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+- name: Create cofig file for containerd
+  ansible.builtin.shell: containerd config default | sudo tee /etc/containerd/config.toml
+  args:
+    creates: /etc/containerd/config.toml
+  notify: Restart_Containerd
+- name: Ajust containerd file
+  ansible.builtin.shell: sed -e 's/SystemdCgroup = false/SystemdCgroup = true/g' -i /etc/containerd/config.toml
+- name: Ensure containerd is enabled
+  ansible.builtin.systemd:
+    name: containerd
+    enabled: true
+    state: started

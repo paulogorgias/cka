@@ -1,0 +1,20 @@
+- name: Init kube cluster
+  block:
+    - name: start k8s-cluster
+      shell: kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.27.0
+      args:
+        creates: /etc/kubernetes/admin.conf
+    - name: Create remote dir
+      file:
+        path: /root/.kube/
+        state: directory
+    - name: Setup kubectl access
+      ansible.builtin.copy:
+        remote_src: yes
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
+    - name: Install calico
+      shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+
+
+  when: inventory_hostname == 'k8s-controler'

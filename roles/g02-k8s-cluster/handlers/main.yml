@@ -1,2 +1,9 @@
 ---
 # handlers file for g02-k8s-cluster
+- name: Restart_hosts
+  community.general.shutdown:
+    msg: This servers will be restarted
+- name: Restart_Containerd
+  systemd:
+    name: containerd
+    state: restarted

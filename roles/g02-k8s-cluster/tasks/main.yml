@@ -2,3 +2,30 @@
 # tasks file for g02-k8s-cluster
 - name: Update SO
   include_tasks: base_{{ansible_os_family}}.yml
+- name: Install Pacakges
+  ansible.builtin.include_tasks: packages_{{ansible_os_family}}.yml
+- name: Configure Pacakges
+  ansible.builtin.include_tasks: configure_{{ansible_os_family}}.yml
+- name: Configure cluster
+  ansible.builtin.include_tasks: setup_control.yml
+
+- name: Get join command
+  shell: kubeadm token create --print-join-command
+  register: joing_cm
+  when:  inventory_hostname  == "k8s-controler"
+- name: Register comando
+  ansible.builtin.set_fact:
+    join_command: “{{ joing_cm.stdout_lines[-1] }}”
+  when:  inventory_hostname  == "k8s-controler"
+- name: debug
+  debug:
+    msg: "{{ joing_cm }}"
+- name: Setup the kubeadm command on all hosts
+  ansible.builtin.set_fact:
+    joing_cmd: "{{ joing_cm.stdout }}"
+  delegate_to: "{{ item }}"
+  when: joing_cm.stdout is defined
+  delegate_facts: true
+  with_items: "{{ groups['all'] }}"
+- name: Configure worker node
+  ansible.builtin.include_tasks: configure_workers.yml

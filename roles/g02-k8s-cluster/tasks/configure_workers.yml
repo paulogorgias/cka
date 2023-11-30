@@ -1,0 +1,11 @@
+---
+- name: Configure worker
+  block:
+    - name: debug 2
+      debug:
+        msg: "{{ joing_cmd}}"
+    - name: Join host
+      shell: "{{ joing_cmd }}"
+      args:
+        executable: /bin/bash
+  when:  kubernetes_role == "node" 

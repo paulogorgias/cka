@@ -24,10 +24,10 @@
         value: 1
         state: present
       loop: "{{ sysctlvalues }}"
-    - name: Update Server
-      ansible.builtin.apt:
-        upgrade: dist
-        force_apt_get: true
+    # - name: Update Server
+    #   ansible.builtin.apt:
+    #     upgrade: dist
+    #     force_apt_get: true
     - name: Install containerd
       ansible.builtin.apt:
         name: containerd
@@ -70,20 +70,20 @@
     #   ansible.builtin.apt_repository:
     #     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     #     state: present
-    - name: add kubernet pacages
-      ansible.builtin.apt:
-        name:
-          - kubelet=1.27.0-00
-          - kubeadm=1.27.0-00
-          - kubectl=1.27.0-00
-    - name: Set hold on packages
-      ansible.builtin.dpkg_selections:
-        name: "{{ item }}"
-        selection: hold
-      loop:
-        - kubelet
-        - kubeadm
-        - kubectl
+    # - name: add kubernet pacages
+    #   ansible.builtin.apt:
+    #     name:
+    #       - kubelet=1.27.0-00
+    #       - kubeadm=1.27.0-00
+    #       - kubectl=1.27.0-00
+    # - name: Set hold on packages
+    #   ansible.builtin.dpkg_selections:
+    #     name: "{{ item }}"
+    #     selection: hold
+    #   loop:
+    #     - kubelet
+    #     - kubeadm
+    #     - kubectl
     - name: Init kube cluster
       block:
         - name: start k8s-cluster

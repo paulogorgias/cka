@@ -7,4 +7,3 @@ g02_sysctl:
  - net.bridge.bridge-nf-call-iptables
  - net.ipv4.ip_forward
  - net.bridge.bridge-nf-call-ip6tables
-
