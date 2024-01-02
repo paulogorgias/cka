@@ -1,13 +1,10 @@
 [new_hosts]
-k8s-worker1 ansible_host=192.168.122.42  kubernetes_role="node"
-k8s-worker2 ansible_host=192.168.122.27  kubernetes_role="node"
-k8s-controler ansible_host=192.168.122.29 kubernetes_role="control_plane"
+k8s-worker1 ansible_host=10.200.200.54  kubernetes_role="node"
+k8s-controler ansible_host=10.200.200.53 kubernetes_role="control_plane"
 
 [k8s_cluster]
-k8s-worker1 ansible_host=192.168.122.42
-k8s-worker2 ansible_host=192.168.122.27
-k8s-controler ansible_host=192.168.122.29
+k8s-worker1 ansible_host=10.200.200.54
+k8s-controler ansible_host=10.200.200.53
 
 [workers]
 k8s-worker1
-k8s-worker2
