@@ -1,7 +1,7 @@
 - name: Init kube cluster
   block:
     - name: start k8s-cluster
-      shell: kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.27.0
+      shell: kubeadm init --pod-network-cidr 192.168.0.0/16 
       register: kubeadm_init
       args:
         creates: /etc/kubernetes/executado
@@ -9,7 +9,7 @@
     - name: kubeadm init executou com sucesso?
       copy:
         content: "O cluster foi iniciado com sucesso"
-        dest: /etc/kubernets/executado
+        dest: /etc/kubernetes/executado
       when: kubeadm_init.rc == 0
     - name: Create remote dir
       file:

@@ -3,7 +3,7 @@
   hosts: k8s_cluster
   become: true
   vars:
-    k8s_version: 1.28.0
+    k8s_version: 1.28.0-00
 
 
   roles:

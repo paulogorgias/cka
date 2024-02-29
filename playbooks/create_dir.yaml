@@ -1,0 +1,10 @@
+---
+- name: Create dir
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Create folder
+      file:
+        state: directory
+        path: /Volumes/Data
