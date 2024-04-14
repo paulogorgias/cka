@@ -21,7 +21,9 @@
         src: /etc/kubernetes/admin.conf
         dest: /root/.kube/config
     - name: Install calico
-      shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+      shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml
 
+    - name: Install calico custom resource
+      shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml
 
   when: inventory_hostname == 'k8s-controler'
