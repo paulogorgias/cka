@@ -42,9 +42,9 @@
 # notify: Restart_hosts
 - name: Add apt key
   ansible.builtin.apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    url: "{{ k8s_key }}"
     state: present
 - name: Add repository
   ansible.builtin.apt_repository:
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    repo: "{{ k8s_repo }}"
     state: present

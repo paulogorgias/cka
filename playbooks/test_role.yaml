@@ -3,8 +3,9 @@
   hosts: k8s_cluster
   become: true
   vars:
-    k8s_version: 1.28.0-00
-
+    k8s_version: 1.29.0-00
+    k8s_key: https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
+    k8s_repo: "eb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
 
   roles:
-    - role: /home/g02/apps/cka/roles/g02-k8s-cluster
+    - role: g02-k8s-cluster
